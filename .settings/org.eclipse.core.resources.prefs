@@ -1,0 +1,14 @@
+eclipse.preferences.version=1
+encoding//src/main/java/br/com/correios/CModal.java=UTF-8
+encoding//src/main/java/br/com/correios/CObjeto.java=UTF-8
+encoding//src/main/java/br/com/correios/CResultado.java=UTF-8
+encoding//src/main/java/br/com/correios/CResultadoModal.java=UTF-8
+encoding//src/main/java/br/com/correios/CResultadoObjeto.java=UTF-8
+encoding//src/main/java/br/com/correios/CResultadoServicos.java=UTF-8
+encoding//src/main/java/br/com/correios/CServico.java=UTF-8
+encoding//src/main/java/br/com/correios/CServicosCalculo.java=UTF-8
+encoding//src/main/java/br/com/correios/CalcPrecoPrazoWS.java=UTF-8
+encoding//src/main/java/br/com/correios/CalcPrecoPrazoWSLocator.java=UTF-8
+encoding//src/main/java/br/com/correios/CalcPrecoPrazoWSSoap.java=UTF-8
+encoding//src/main/java/br/com/correios/CalcPrecoPrazoWSSoapStub.java=UTF-8
+encoding//src/main/java/br/com/correios/Versao.java=UTF-8
