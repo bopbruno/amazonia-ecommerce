@@ -15,6 +15,7 @@ import br.com.amazonia.ecommerce.domain.Imposto;
 import br.com.amazonia.ecommerce.domain.ItemCarrinho;
 import br.com.amazonia.ecommerce.domain.OrdemCompra;
 import br.com.amazonia.ecommerce.domain.Produto;
+import br.com.amazonia.ecommerce.enuns.CodigoServicoCorreios;
 import br.com.amazonia.ecommerce.enuns.TipoProdutoEnum;
 import br.com.amazonia.ecommerce.exception.CupomInvalidoException;
 import br.com.amazonia.ecommerce.repository.OrdemCompraRepositoryImpl;
@@ -75,7 +76,7 @@ public class EcommerceTest {
 			if(peso>0) {
 				String cdAvisoRecebimento = "N";
 				String cdMaoPropria = "N";
-			    String cdServico="04510";
+			    String cdServico= CodigoServicoCorreios.PAC_sem_contrato_04510.getDescricao();
 			    String cepDestino = "90619900";
 				detalheEnvio = freteServiceImpl.calcularFrete(cdAvisoRecebimento, cdMaoPropria, cdServico, cepDestino, carrinho);
 			}
