@@ -20,7 +20,7 @@ public class CalculadoraImpostoServiceTest {
 		List<TipoProdutoEnum> listTipoProd= new ArrayList<>();
 		listTipoProd.add(TipoProdutoEnum.LIVRO);
 		
-		Imposto imposto = new Imposto(listTipoProd, new Double(0.1));
+		Imposto imposto = new Imposto(listTipoProd, new Double(0));
 		Produto produto = new Produto("1", 10, "ps4", false);
 		
 		produto.setTipo(TipoProdutoEnum.LIVRO);
@@ -29,7 +29,7 @@ public class CalculadoraImpostoServiceTest {
 		
 		double impostoTotal = calculadoraImpostoService.calcularImposto(produto);
 				
-		assertEquals(impostoTotal, 1, 0.001);
+		assertEquals(impostoTotal, 0, 0.001);
 		
 	}
 	
