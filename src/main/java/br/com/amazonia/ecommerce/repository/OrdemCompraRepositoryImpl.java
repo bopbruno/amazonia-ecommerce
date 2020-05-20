@@ -12,7 +12,6 @@ public final class OrdemCompraRepositoryImpl {
 	private int proximoIdOrdemCompra;
 	
 	OrdemCompraRepositoryImpl(){
-		listaDeOrdens.put(0,new OrdemCompra(null, null, null));
 	}
 	
 	public static OrdemCompraRepositoryImpl getInstance() {
@@ -25,10 +24,11 @@ public final class OrdemCompraRepositoryImpl {
 
 	public OrdemCompra addOrdemCompra(OrdemCompra ordemCompra) {
 		ordemCompra.setId(gerarProximoIdOrdemCompra());
-		return listaDeOrdens.put(ordemCompra.getId(), ordemCompra);
+		listaDeOrdens.put(ordemCompra.getId(), ordemCompra);
+		return ordemCompra;
 	}
 
 	private synchronized int gerarProximoIdOrdemCompra() {
-		return proximoIdOrdemCompra;
+		return ++proximoIdOrdemCompra;
 	}
 }

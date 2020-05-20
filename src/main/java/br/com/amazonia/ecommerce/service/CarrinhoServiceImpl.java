@@ -13,8 +13,8 @@ public final class CarrinhoServiceImpl {
 		this.carrinhoRepositoryImpl = CarrinhoRepositoryImpl.getInstance();
 	}
 
-	public Carrinho criarCarrinho(Carrinho carrinho) {
-		return carrinhoRepositoryImpl.criarCarrinho(carrinho);
+	public Carrinho criarCarrinho() {
+		return carrinhoRepositoryImpl.criarCarrinho();
 	}
 
 	public static CarrinhoServiceImpl getInstance() {

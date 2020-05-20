@@ -1,18 +1,24 @@
 package br.com.amazonia.ecommerce.service;
 
 import br.com.amazonia.ecommerce.domain.Produto;
-import br.com.amazonia.ecommerce.repository.ProdutoRepository;
+import br.com.amazonia.ecommerce.repository.ProdutoRepositoryImpl;
 
-public class ProdutoServiceImpl {
+public final class ProdutoServiceImpl {
 	
-	ProdutoRepository produtoRepository;
+	private ProdutoRepositoryImpl produtoRepository;
 	
-	public ProdutoServiceImpl(ProdutoRepository produtoRepository) {
-		this.produtoRepository = produtoRepository;
+	private static ProdutoServiceImpl INTANCE = new ProdutoServiceImpl();
+	
+	public ProdutoServiceImpl() {
+		this.produtoRepository = ProdutoRepositoryImpl.getInstance();
 	}
 
 	public Produto addProduct(Produto produto) {
 		return produtoRepository.save(produto);
+	}
+
+	public static ProdutoServiceImpl getInstance() {
+		return INTANCE;
 	}
 
 }

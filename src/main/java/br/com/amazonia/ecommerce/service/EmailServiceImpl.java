@@ -3,10 +3,8 @@ package br.com.amazonia.ecommerce.service;
 import java.util.Properties;
 
 import javax.mail.Message;
-import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
@@ -14,8 +12,8 @@ public final class EmailServiceImpl {
 
 	private static EmailServiceImpl emailService = new EmailServiceImpl();
 
-	private static String USER_NAME = "boppedrosa@gmail.com"; // GMail user name (just the part before "@gmail.com")
-	private static String PASSWORD = "Kamalea*9"; // GMail password
+	private static String USER_NAME = "boppedrosa@gmail.com";
+	private static String PASSWORD = "Teste@123";
 	
 
 	public EmailServiceImpl() {
@@ -50,7 +48,6 @@ public final class EmailServiceImpl {
 			message.setFrom(new InternetAddress(from));
 			InternetAddress[] toAddress = new InternetAddress[to.length];
 
-			// To get the array of addresses
 			for (int i = 0; i < to.length; i++) {
 				toAddress[i] = new InternetAddress(to[i]);
 			}
@@ -65,11 +62,8 @@ public final class EmailServiceImpl {
 			transport.connect(host, from, pass);
 			transport.sendMessage(message, message.getAllRecipients());
 			transport.close();
-		} catch (AddressException ae) {
+		} catch (Exception ae) {
 			ae.printStackTrace();
-			return false;
-		} catch (MessagingException me) {
-			me.printStackTrace();
 			return false;
 		}
 

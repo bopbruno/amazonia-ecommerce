@@ -1,7 +1,5 @@
 package br.com.amazonia.ecommerce.domain;
 
-import java.math.BigDecimal;
-
 public class ItemCarrinho {
 	
 	private Produto produto;
@@ -34,4 +32,9 @@ public class ItemCarrinho {
 		this.precoTotal = precoTotal;
 	}
 
+	public double atualizarPrecoTotal() {
+		
+		return 0;
+	}
+	
 }

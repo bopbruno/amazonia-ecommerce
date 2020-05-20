@@ -23,7 +23,7 @@ public class Produto {
 		copunsPromocionaisElegiveis = new ArrayList<>();
 	}
 
-	public String getId() {
+	public String getEAN() {
 		return EAN;
 	}
 
@@ -31,30 +31,6 @@ public class Produto {
 		return precoUnitario;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((EAN == null) ? 0 : EAN.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Produto other = (Produto) obj;
-		if (EAN == null) {
-			if (other.EAN != null)
-				return false;
-		} else if (!EAN.equals(other.EAN))
-			return false;
-		return true;
-	}
 
 	public String getNome() {
 		return nome;

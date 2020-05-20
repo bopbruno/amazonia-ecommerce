@@ -5,9 +5,10 @@ public class OrdemCompra {
 	private int id;
 	private Cliente cliente;
 	private Carrinho carrinho;
-	private DetalheEnvio detalheEnvio;
-	
-	public OrdemCompra(Cliente cliente,Carrinho carrinho,DetalheEnvio detalheEnvio) {
+	private DetalheFrete detalheEnvio;
+	private double totalImposto;
+
+	public OrdemCompra(Cliente cliente,Carrinho carrinho,DetalheFrete detalheEnvio) {
 		this.cliente = cliente;
 		this.carrinho = carrinho;
 		this.detalheEnvio = detalheEnvio;
@@ -22,20 +23,21 @@ public class OrdemCompra {
 	public Cliente getCliente() {
 		return cliente;
 	}
-	public void setCliente(Cliente cliente) {
-		this.cliente = cliente;
-	}
+
 	public Carrinho getCarrinho() {
 		return carrinho;
 	}
-	public void setCarrinho(Carrinho carrinho) {
-		this.carrinho = carrinho;
+	
+	public double getTotalImposto() {
+		return totalImposto;
 	}
-	public DetalheEnvio getDetalheEnvio() {
+
+	public void setTotalImposto(double totalImposto) {
+		this.totalImposto = totalImposto;
+	}
+	
+	public DetalheFrete getDetalheEnvio() {
 		return detalheEnvio;
-	}
-	public void setDetalheEnvio(DetalheEnvio detalheEnvio) {
-		this.detalheEnvio = detalheEnvio;
 	}
 
 }

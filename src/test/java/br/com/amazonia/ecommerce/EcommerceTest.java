@@ -1,98 +1,94 @@
 package br.com.amazonia.ecommerce;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Test;
 
 import br.com.amazonia.ecommerce.domain.Carrinho;
 import br.com.amazonia.ecommerce.domain.Cliente;
-import br.com.amazonia.ecommerce.domain.DetalheEnvio;
+import br.com.amazonia.ecommerce.domain.DetalheFrete;
+import br.com.amazonia.ecommerce.domain.Imposto;
 import br.com.amazonia.ecommerce.domain.ItemCarrinho;
 import br.com.amazonia.ecommerce.domain.OrdemCompra;
 import br.com.amazonia.ecommerce.domain.Produto;
-import br.com.amazonia.ecommerce.repository.CarrinhoRepositoryImpl;
-import br.com.amazonia.ecommerce.repository.ClienteRepository;
-import br.com.amazonia.ecommerce.repository.ClienteRepositoryImpl;
+import br.com.amazonia.ecommerce.enuns.TipoProdutoEnum;
+import br.com.amazonia.ecommerce.exception.CupomInvalidoException;
 import br.com.amazonia.ecommerce.repository.OrdemCompraRepositoryImpl;
-import br.com.amazonia.ecommerce.repository.ProdutoRepository;
-import br.com.amazonia.ecommerce.repository.ProdutoRepositoryImpl;
+import br.com.amazonia.ecommerce.service.CalculadoraImpostoServiceImpl;
 import br.com.amazonia.ecommerce.service.CarrinhoServiceImpl;
-import br.com.amazonia.ecommerce.service.ClienteServiceImpl;
 import br.com.amazonia.ecommerce.service.EmailServiceImpl;
+import br.com.amazonia.ecommerce.service.FreteServiceImpl;
 import br.com.amazonia.ecommerce.service.OrdemCompraServiceImpl;
-import br.com.amazonia.ecommerce.service.ProdutoServiceImpl;
+import br.com.amazonia.ecommerce.service.PromocaoServiceImpl;
 
 public class EcommerceTest {
-
-	//@Test
-	public void cadastrarCliente_ClienteCadastradoComSucesso() {
-		
-		//arrange
-		Cliente cliente = new Cliente("bruno@mail.com");
-		ClienteRepository clienteRepository = ClienteRepositoryImpl.getInstance();
-		ClienteServiceImpl clienteService = ClienteServiceImpl.getInstance();
-		
-		
-		//act
-		clienteService.addCliente(cliente);
-		
-		//assert
-		assertEquals(cliente, clienteRepository.getClienteById("bruno@mail.com"));
-		
-	}
-	
-	//@Test
-	public void cadastrarProduto_produtoCadastradoComSucesso() {
-		Produto produto = new Produto("123", 10, "PS4", false);
-		ProdutoRepository produtoRepository = ProdutoRepositoryImpl.getInstance();
-		ProdutoServiceImpl produtoServiceImpl = new ProdutoServiceImpl(produtoRepository);
-		
-		produtoServiceImpl.addProduct(produto);
-		
-		
-		assertEquals(produto , produtoRepository.getProdutoById("123"));
-		
-	}	
-	
-	//@Test
-	public void adicionarProdutoCarrinho_ProdutoAdicionadoComSucesso() {
-		Produto produto = new Produto("123", 10, "PS4", false);
-		//Cliente cliente = new Cliente("bruno@mail.com");
-		Carrinho carrinho = new Carrinho(1);
-		ItemCarrinho itemCarrinho = new ItemCarrinho(produto);
-		
-		CarrinhoRepositoryImpl carrinhoRepositoryImpl = CarrinhoRepositoryImpl.getInstance();
-		CarrinhoServiceImpl carrinhoServiceImpl = CarrinhoServiceImpl.getInstance();
-		
-		carrinhoServiceImpl.criarCarrinho(carrinho);
-		
-		carrinho.addItem(itemCarrinho);
-		
-		assertEquals(produto, carrinhoRepositoryImpl.getCarrinho(1).getItens().get(produto.getId()).getProduto());
-		
-	}
 	
 	@Test
 	public void realizarCompra_compraRealizadaComSucesso() {
 		
-		Produto produto1 = new Produto("11",10, "PS4",false);
+		Produto produto1 = new Produto("11",10, "livro 1",false);
 		Produto produto2 = new Produto("22", 10, "Celular", false);
+		produto1.setTipo(TipoProdutoEnum.LIVRO);
+		produto1.addCopunsPromocionais("cupom10");
 		
 		Cliente cliente = new Cliente("bop_bruno@hotmail.com");
-		Carrinho carrinho = new Carrinho(1);
+		
+		List<TipoProdutoEnum> tpProdutos = new ArrayList<>();
+		tpProdutos.add(TipoProdutoEnum.LIVRO);
+		tpProdutos.add(TipoProdutoEnum.REVISTA);
+		tpProdutos.add(TipoProdutoEnum.JORNAL);
+		tpProdutos.add(TipoProdutoEnum.E_READER);
+		
+		Imposto impostoIsento =  new Imposto(tpProdutos, 0.0);
+		
 		ItemCarrinho itemCarrinho1 = new ItemCarrinho(produto1);
 		ItemCarrinho itemCarrinho2 = new ItemCarrinho(produto2);
 		
-		DetalheEnvio detalheEnvio = new DetalheEnvio();
-
-		OrdemCompraRepositoryImpl ordemCompraRepositoryImpl = OrdemCompraRepositoryImpl.getInstance();
 		CarrinhoServiceImpl carrinhoServiceImpl = CarrinhoServiceImpl.getInstance();
-		OrdemCompraServiceImpl ordemCompraServiceImpl = new OrdemCompraServiceImpl();
+		OrdemCompraServiceImpl ordemCompraServiceImpl = OrdemCompraServiceImpl.getOrdemCompraService();
+		CalculadoraImpostoServiceImpl calculadoraImpostoServiceImpl = CalculadoraImpostoServiceImpl.getInstance();
+		FreteServiceImpl freteServiceImpl = FreteServiceImpl.getInstance();
+		PromocaoServiceImpl promocaoServiceImpl = PromocaoServiceImpl.getInstance();
 		
-		carrinhoServiceImpl.criarCarrinho(carrinho);
+		promocaoServiceImpl.addPromocao("cupom10", 0.1);
+		
+		calculadoraImpostoServiceImpl.addImposto(impostoIsento);
+		
+		Carrinho carrinho = carrinhoServiceImpl.criarCarrinho();
 		
 		carrinho.addItem(itemCarrinho1);
 		carrinho.addItem(itemCarrinho2);
+		
+		DetalheFrete detalheEnvio = null;
+		try {
+			int peso = 0;
+			for(String key : carrinho.getItens().keySet()) {
+				ItemCarrinho itemLocal = carrinho.getItens().get(key);
+				if(!itemLocal.getProduto().isEntregaDigital()) {
+					peso++;
+				}
+			}
+			if(peso>0) {
+				String cdAvisoRecebimento = "N";
+				String cdMaoPropria = "N";
+			    String cdServico="04510";
+			    String cepDestino = "90619900";
+				detalheEnvio = freteServiceImpl.calcularFrete(cdAvisoRecebimento, cdMaoPropria, cdServico, cepDestino, carrinho);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+				
+		try {
+			promocaoServiceImpl.aplicarCupomPromocional(carrinho, "cupom10");
+		} catch (CupomInvalidoException e) {
+			System.out.println(e.getMessage());
+		}
 		
 		OrdemCompra ordemCompra = new OrdemCompra(cliente, carrinho, detalheEnvio);
 		
@@ -103,7 +99,18 @@ public class EcommerceTest {
 		
 		emailService.enviarEmail(ordemCompra.getCliente().getEmail(), "Compra realizada.", corpoEmail);
 		
+		
+		OrdemCompraRepositoryImpl ordemCompraRepositoryImpl = OrdemCompraRepositoryImpl.getInstance();
+		
 		assertEquals(ordemCompra, ordemCompraRepositoryImpl.getListaDeOrdens(ordemCompra.getId()));
+		
+		DetalheFrete freteEsperado = ordemCompra.getDetalheEnvio();
+		assertNotEquals(0, freteEsperado.getCustoEnvio());
+		
+		Double descontoEsperado = ordemCompra.getCarrinho().getItens().get("11").getPrecoTotal();
+		assertEquals(9, descontoEsperado,0.001);
+		
+		assertEquals(0, ordemCompra.getTotalImposto(), 0.001);
 		
 	}
 

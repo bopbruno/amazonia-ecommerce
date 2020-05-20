@@ -1,10 +1,12 @@
 package br.com.amazonia.ecommerce.service;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import br.com.amazonia.ecommerce.domain.Carrinho;
 import br.com.amazonia.ecommerce.domain.ItemCarrinho;
 import br.com.amazonia.ecommerce.domain.Produto;
+import br.com.amazonia.ecommerce.exception.CupomInvalidoException;
 
 public final class PromocaoServiceImpl {
 
@@ -12,35 +14,34 @@ public final class PromocaoServiceImpl {
 	private Map<String, Double> promocoesAtivas;
 	
 	private PromocaoServiceImpl() {
-		
+		promocoesAtivas = new HashMap<>();
 	}
 	
-	public PromocaoServiceImpl getInstance() {
+	public static PromocaoServiceImpl getInstance() {
 		return promocaoServiceImpl;
 	}
 	
-	public Carrinho aplicarCupomPromocional(Carrinho carrinho, String cupom) {
+	public Carrinho aplicarCupomPromocional(Carrinho carrinho, String cupom) throws CupomInvalidoException {
 		
 		if(!promocoesAtivas.containsKey(cupom)) {
-			//TODO inserir exception cupom invalido
-			return carrinho;
+			throw new CupomInvalidoException();
 		}
 		
 		for(String key : carrinho.getItens().keySet()) {
 			ItemCarrinho item = carrinho.getItens().get(key);
 			Produto produto = carrinho.getItens().get(key).getProduto();
 			if(produto.getCopunsPromocionaisElegiveis().contains(cupom)) {
-				item.setPrecoTotal(item.getPrecoTotal()* promocoesAtivas.get(cupom));
+				item.setPrecoTotal(item.getPrecoTotal()* (1-promocoesAtivas.get(cupom)) );
 			}
-		}		
+		}
+		carrinho.atualizarValorTotal();
 		return carrinho;		
 	}
 	
 	public void addPromocao(String cupom, double desconto) {
 		
 		if(desconto < 0 && desconto > 1) {
-			//TODO inserir exception desconto fora do intervalo de 0 - 1
-			return;
+			throw new IllegalArgumentException("desconto fora do intervalo de ( 0 ) - ( 1 )");
 		}
 		
 		promocoesAtivas.put(cupom, desconto);

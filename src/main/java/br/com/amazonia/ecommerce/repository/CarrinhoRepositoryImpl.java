@@ -9,6 +9,7 @@ public final class CarrinhoRepositoryImpl {
 
 	private static final CarrinhoRepositoryImpl INSTANCE = new CarrinhoRepositoryImpl();
 	private final Map<Integer, Carrinho> listaDeCarrinhos = new HashMap<>();
+	private int contadorIdCarrinho = 0;
 
 	public static CarrinhoRepositoryImpl getInstance() {
 		return INSTANCE;
@@ -18,17 +19,20 @@ public final class CarrinhoRepositoryImpl {
 		return listaDeCarrinhos.get(idCarrinho);
 	}
 
-	public Carrinho criarCarrinho(Carrinho carrinho) {
-		if (listaDeCarrinhos.keySet().contains(carrinho.getId())) {
-			throw new IllegalArgumentException("Can not create a cart. A cart with the give id aldrady exist "+ carrinho.getId());
-		}
+	public Carrinho criarCarrinho() {
+		
+		contadorIdCarrinho++;
 
-		return listaDeCarrinhos.put(carrinho.getId(), carrinho);
+		Carrinho carrinho = new Carrinho(contadorIdCarrinho);
+		
+		listaDeCarrinhos.put(contadorIdCarrinho, carrinho);
+		
+		return carrinho;
 	}
 
 	public void delete(int idCarrinho) {
 	    if(!listaDeCarrinhos.keySet().contains(idCarrinho)) {
-	        throw new IllegalArgumentException(String.format("Can not delete cart. The cart with the give id (%) does not does not exist",idCarrinho));
+	        throw new IllegalArgumentException("Não foi possivel deletar o carrinho. Carrinho com o id "+idCarrinho+" não existe.");
 	      }
 
 	    listaDeCarrinhos.remove(idCarrinho);
